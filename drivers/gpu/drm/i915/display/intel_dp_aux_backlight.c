@@ -632,20 +632,13 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
 	struct intel_dp *intel_dp = enc_to_intel_dp(connector->encoder);
 	struct drm_i915_private *i915 = dp_to_i915(intel_dp);
 	bool try_intel_interface = false, try_vesa_interface = false;
-	bool force_dpcd;
-
-	force_dpcd = drm_dp_has_quirk(&intel_dp->desc, intel_dp->edid_quirks,
-				      DP_QUIRK_FORCE_DPCD_BACKLIGHT);
 
 	/* Check the VBT and user's module parameters to figure out which
 	 * interfaces to probe
 	 */
 	switch (i915->params.enable_dpcd_backlight) {
 	case INTEL_DP_AUX_BACKLIGHT_OFF:
-		if (!force_dpcd)
-			return -ENODEV;
-		try_vesa_interface = true;
-		break;
+		return -ENODEV;
 	case INTEL_DP_AUX_BACKLIGHT_AUTO:
 		switch (i915->vbt.backlight.type) {
 		case INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE:
